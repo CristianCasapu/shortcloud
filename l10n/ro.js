@@ -15,7 +15,6 @@ OC.L10N.register(
         "A short link cannot point to another short link": "Un link scurt nu poate trimite la alt link scurt",
         "A short link may only contain letters, digits, \"-\" and \"_\" (1 to 64 characters)": "Un link scurt poate conține doar litere, cifre, „-” și „_” (1 până la 64 de caractere)",
         "A short link to any site would turn your domain into an open redirector for phishing. Share links are always allowed; choose what else is.": "Linkuri scurte către orice site ar transforma domeniul tău într-un redirector deschis pentru phishing. Linkurile de partajare sunt mereu permise; alege ce altceva mai e.",
-        "But the short address does not answer yet: check that mod_rewrite is on and AllowOverride allows .htaccess, or use the web server snippet below.": "Dar adresa scurtă încă nu răspunde: verifică dacă mod_rewrite e activ și AllowOverride permite .htaccess, sau folosește fragmentul pentru serverul web de mai jos.",
         "Check the address for typing mistakes, or ask the person who sent it for a new link.": "Verifică adresa pentru greșeli de scriere sau cere un link nou persoanei care ți l-a trimis.",
         "Close": "Închide",
         "Command line": "Linie de comandă",
@@ -127,13 +126,10 @@ OC.L10N.register(
         "The owner has switched this short link off for now.": "Proprietarul a oprit deocamdată acest link scurt.",
         "The prefix may only contain letters, digits, \"_\", \"-\", \"+\" and \"~\"": "Prefixul poate conține doar litere, cifre, „_”, „-”, „+” și „~”",
         "The rewrite rule for short links is missing from .htaccess, so short links answer 404. Open Administration settings › Shortcloud and click \"Install rewrite rule\".": "Regula de rescriere pentru linkuri scurte lipsește din .htaccess, așa că linkurile scurte răspund 404. Deschide Setări de administrare › Shortcloud și apasă „Instalează regula de rescriere”.",
-        "The rewrite rule for short links (%s) is in place.": "Regula de rescriere pentru linkuri scurte (%s) este instalată.",
         "The rule in .htaccess is out of date (the prefix or the app path changed). Install it again.": "Regula din .htaccess este învechită (s-a schimbat prefixul sau calea aplicației). Instaleaz-o din nou.",
-        "The rule is installed in {path}.": "Regula este instalată în {path}.",
         "The rule is not installed. Short links answer 404 until it is.": "Regula nu este instalată. Până atunci, linkurile scurte răspund 404.",
         "The share behind this link was deleted": "Partajarea din spatele acestui link a fost ștearsă",
         "The share behind this short link was removed or has expired.": "Partajarea din spatele acestui link scurt a fost ștearsă sau a expirat.",
-        "The short address answers.": "Adresa scurtă răspunde.",
         "The slug length must be between 4 and 32": "Lungimea terminației trebuie să fie între 4 și 32",
         "The target address contains invalid characters": "Adresa țintă conține caractere nevalide",
         "The target address is missing or too long": "Adresa țintă lipsește sau este prea lungă",
@@ -180,6 +176,10 @@ OC.L10N.register(
         ],
         "Album link not found": "Linkul de album nu a fost găsit",
         "This album link does not exist": "Acest link de album nu există",
-        "Keep the rule in place after Nextcloud upgrades (checked right after an app or Nextcloud update, plus once a day)": "Păstrează regula după actualizările Nextcloud (verificată imediat după o actualizare de aplicație sau de Nextcloud, plus o dată pe zi)"
+        "Keep the rule in place after Nextcloud upgrades (checked right after an app or Nextcloud update, plus once a day)": "Păstrează regula după actualizările Nextcloud (verificată imediat după o actualizare de aplicație sau de Nextcloud, plus o dată pe zi)",
+        "Short links (%s) answer.": "Linkurile scurte (%s) răspund.",
+        "The rewrite rule for short links is in .htaccess, but the web server does not apply it (nginx, or Apache without AllowOverride), so short links (%s) answer 404. Add the rule to the web server configuration; the snippet is in Administration settings › Shortcloud.": "Regula de rescriere pentru linkuri scurte este în .htaccess, dar serverul web nu o aplică (nginx sau Apache fără AllowOverride), așa că linkurile scurte (%s) răspund 404. Adaugă regula în configurația serverului web; fragmentul este în Setări de administrare › Shortcloud.",
+        "The rule is installed in {path} and the short address answers.": "Regula este instalată în {path} și adresa scurtă răspunde.",
+        "The rule is in {path}, but the web server does not apply it: short links answer 404. Under nginx, or Apache without AllowOverride, add the snippet below to the web server configuration instead.": "Regula este în {path}, dar serverul web nu o aplică: linkurile scurte răspund 404. Sub nginx sau Apache fără AllowOverride, adaugă fragmentul de mai jos în configurația serverului web."
     },
 "nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);");

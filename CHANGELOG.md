@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file. The format foll
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [1.1.3] – 2026-09-09
+
+- Works straight from the app store: on the first request after the app is enabled, the rewrite
+  rule is written into .htaccess (when writable) without a visit to the settings page.
+- The setup check and the settings page now probe the short address over HTTP instead of only
+  reading .htaccess, so an ignored .htaccess (nginx, Apache without AllowOverride) is reported
+  as such, with the snippet to use. go.php answers the probe before booting Nextcloud.
+
 ## [1.1.2] – 2026-09-09
 
 - No more polling: the rewrite rule is checked exactly when something could have removed it —

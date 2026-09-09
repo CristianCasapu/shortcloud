@@ -20,6 +20,17 @@ use OCP\IRequest;
 use OCP\Server;
 use OCP\Util;
 
+// The probe used by the settings page and the setup check: answered before Nextcloud
+// boots, so it only proves that the web server's rewrite rule reaches this script.
+if (($_GET['slug'] ?? '') === '_ping') {
+	header('X-Shortcloud: ping');
+	header('Content-Type: application/json; charset=utf-8');
+	header('Cache-Control: no-store');
+	header('Access-Control-Allow-Origin: *');
+	echo '{"shortcloud":true}';
+	exit;
+}
+
 foreach ([__DIR__ . '/../../lib/base.php', __DIR__ . '/../../../lib/base.php'] as $base) {
 	if (is_file($base)) {
 		require_once $base;

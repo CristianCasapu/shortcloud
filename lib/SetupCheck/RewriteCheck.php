@@ -9,6 +9,7 @@ namespace OCA\Shortcloud\SetupCheck;
 
 use OCA\Shortcloud\Service\Config;
 use OCA\Shortcloud\Service\Htaccess;
+use OCA\Shortcloud\Service\Probe;
 use OCP\IL10N;
 use OCP\SetupCheck\ISetupCheck;
 use OCP\SetupCheck\SetupResult;
@@ -19,6 +20,7 @@ class RewriteCheck implements ISetupCheck {
 		private IL10N $l,
 		private Htaccess $htaccess,
 		private Config $config,
+		private Probe $probe,
 	) {
 	}
 
@@ -31,9 +33,13 @@ class RewriteCheck implements ISetupCheck {
 	}
 
 	public function run(): SetupResult {
+		$example = $this->config->buildShortUrl($this->config->getDefaultHost(), '…');
+		if ($this->probe->works()) {
+			return SetupResult::success($this->l->t('Short links (%s) answer.', [$example]));
+		}
 		$status = $this->htaccess->status();
 		if ($status === Htaccess::STATUS_OK) {
-			return SetupResult::success($this->l->t('The rewrite rule for short links (%s) is in place.', [$this->config->buildShortUrl($this->config->getDefaultHost(), '…')]));
+			return SetupResult::warning($this->l->t('The rewrite rule for short links is in .htaccess, but the web server does not apply it (nginx, or Apache without AllowOverride), so short links (%s) answer 404. Add the rule to the web server configuration; the snippet is in Administration settings › Shortcloud.', [$example]));
 		}
 		if ($status === Htaccess::STATUS_UNAVAILABLE) {
 			return SetupResult::info($this->l->t('Short links need a rewrite rule in the web server configuration; .htaccess cannot be used here. See the Shortcloud administration settings for the snippet.'));

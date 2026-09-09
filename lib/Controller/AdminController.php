@@ -11,6 +11,7 @@ use OCA\Shortcloud\AppInfo\Application;
 use OCA\Shortcloud\Service\Config;
 use OCA\Shortcloud\Service\Htaccess;
 use OCA\Shortcloud\Service\PrettyUrls;
+use OCA\Shortcloud\Service\Probe;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCSController;
@@ -24,6 +25,7 @@ class AdminController extends OCSController {
 		private Config $config,
 		private Htaccess $htaccess,
 		private PrettyUrls $prettyUrls,
+		private Probe $probe,
 		private IL10N $l,
 	) {
 		parent::__construct(Application::APP_ID, $request);
@@ -54,7 +56,10 @@ class AdminController extends OCSController {
 		return new DataResponse($this->payload());
 	}
 
-	public function rewriteStatus(): DataResponse {
+	public function rewriteStatus(bool $fresh = false): DataResponse {
+		if ($fresh) {
+			$this->probe->works(true);
+		}
 		return new DataResponse($this->rewrite());
 	}
 
@@ -64,6 +69,7 @@ class AdminController extends OCSController {
 	public function installRewrite(): DataResponse {
 		try {
 			$this->htaccess->install();
+			$this->probe->works(true);
 		} catch (\RuntimeException $e) {
 			throw new OCSBadRequestException($this->l->t($e->getMessage()));
 		}
@@ -112,6 +118,7 @@ class AdminController extends OCSController {
 		}
 		return [
 			'status' => $this->htaccess->status(),
+			'probe' => $this->probe->works(),
 			'writable' => $this->htaccess->isWritable(),
 			'path' => $this->htaccess->path(),
 			'block' => $this->htaccess->block(),

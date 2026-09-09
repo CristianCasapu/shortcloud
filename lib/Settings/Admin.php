@@ -11,6 +11,7 @@ use OCA\Shortcloud\AppInfo\Application;
 use OCA\Shortcloud\Service\Config;
 use OCA\Shortcloud\Service\Htaccess;
 use OCA\Shortcloud\Service\PrettyUrls;
+use OCA\Shortcloud\Service\Probe;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IGroupManager;
@@ -23,6 +24,7 @@ class Admin implements ISettings {
 		private Config $config,
 		private Htaccess $htaccess,
 		private PrettyUrls $prettyUrls,
+		private Probe $probe,
 		private IGroupManager $groupManager,
 	) {
 	}
@@ -45,6 +47,7 @@ class Admin implements ISettings {
 			'prettyUrls' => $this->prettyUrls->state(),
 			'rewrite' => [
 				'status' => $this->htaccess->status(),
+			'probe' => $this->probe->works(),
 				'writable' => $this->htaccess->isWritable(),
 				'path' => $this->htaccess->path(),
 				'block' => $this->htaccess->block(),

@@ -31,12 +31,36 @@ class UpgradeWatch {
 
 	/** Cheap: one in-memory config comparison per request; work only after an update. */
 	public function check(): void {
+		$this->firstRun();
 		$current = $this->config->getSystemValueString('version', '');
 		if ($current === '' || $this->appConfig->getValueString(Application::APP_ID, 'core_version', '') === $current) {
 			return;
 		}
 		$this->appConfig->setValueString(Application::APP_ID, 'core_version', $current);
 		$this->repair('Nextcloud ' . $current);
+	}
+
+	/**
+	 * First request after the app was enabled (from the app store or occ): install the
+	 * rule into .htaccess when it is writable, so short links work without a visit to
+	 * the settings page. Harmless under nginx (the file is ignored there); the setup
+	 * check and the settings page then explain what is missing.
+	 */
+	public function firstRun(): void {
+		if ($this->appConfig->getValueString(Application::APP_ID, 'setup_done', '') === '1') {
+			return;
+		}
+		$this->appConfig->setValueString(Application::APP_ID, 'setup_done', '1');
+		if ($this->settings->manageHtaccess() || $this->htaccess->status() !== Htaccess::STATUS_MISSING || !$this->htaccess->isWritable()) {
+			return;
+		}
+		try {
+			$this->htaccess->install();
+			$this->settings->update(['manageHtaccess' => true]);
+			$this->logger->info('Shortcloud installed its rewrite rule in .htaccess on first run', ['app' => 'shortcloud']);
+		} catch (\RuntimeException $e) {
+			$this->logger->info('Shortcloud could not install its rewrite rule on first run: ' . $e->getMessage(), ['app' => 'shortcloud']);
+		}
 	}
 
 	/** Re-installs the rule when the app manages it and it is not in place. */

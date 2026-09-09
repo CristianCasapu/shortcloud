@@ -12,10 +12,11 @@
 				{{ t('shortcloud', 'Nextcloud does not let an app answer at the root of the site, so one rewrite rule sends {prefix}/… to the app. Without it, short links answer 404 and only the long form works.', { prefix: '/' + settings.prefix }) }}
 			</p>
 			<div class="shortcloud-admin__status">
-				<NcNoteCard v-if="rewrite.status === 'ok'" type="success">
-					{{ t('shortcloud', 'The rule is installed in {path}.', { path: rewrite.path }) }}
-					<span v-if="probeResult === true"> {{ t('shortcloud', 'The short address answers.') }}</span>
-					<span v-else-if="probeResult === false"> {{ t('shortcloud', 'But the short address does not answer yet: check that mod_rewrite is on and AllowOverride allows .htaccess, or use the web server snippet below.') }}</span>
+				<NcNoteCard v-if="rewrite.status === 'ok' && rewrite.probe" type="success">
+					{{ t('shortcloud', 'The rule is installed in {path} and the short address answers.', { path: rewrite.path }) }}
+				</NcNoteCard>
+				<NcNoteCard v-else-if="rewrite.status === 'ok'" type="warning">
+					{{ t('shortcloud', 'The rule is in {path}, but the web server does not apply it: short links answer 404. Under nginx, or Apache without AllowOverride, add the snippet below to the web server configuration instead.', { path: rewrite.path }) }}
 				</NcNoteCard>
 				<NcNoteCard v-else-if="rewrite.status === 'outdated'" type="warning">
 					{{ t('shortcloud', 'The rule in .htaccess is out of date (the prefix or the app path changed). Install it again.') }}
@@ -183,7 +184,7 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import { computed, reactive, ref } from 'vue'
-import { adminInstallRewrite, adminRemoveRewrite, adminSave, adminSetPrettyUrls, errorMessage, probe } from '../api'
+import { adminInstallRewrite, adminRemoveRewrite, adminRewriteStatus, adminSave, adminSetPrettyUrls, errorMessage, probe } from '../api'
 
 const props = defineProps<{ state: any }>()
 
@@ -284,6 +285,11 @@ async function removeRewrite() {
 
 async function runProbe() {
 	probeResult.value = await probe(rewrite.value.pingUrl)
+	try {
+		apply(await adminRewriteStatus(true))
+	} catch {
+		// the browser-side result is still shown
+	}
 }
 
 async function probeDomain(host: string) {

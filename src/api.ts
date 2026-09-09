@@ -67,6 +67,11 @@ export async function adminSave(settings: Record<string, unknown>): Promise<any>
 	return data.ocs.data
 }
 
+export async function adminRewriteStatus(fresh = false): Promise<any> {
+	const { data } = await axios.get(`${base()}/admin/rewrite`, { params: { fresh: fresh ? 1 : 0 } })
+	return data.ocs.data
+}
+
 export async function adminInstallRewrite(): Promise<any> {
 	const { data } = await axios.post(`${base()}/admin/rewrite`)
 	return data.ocs.data

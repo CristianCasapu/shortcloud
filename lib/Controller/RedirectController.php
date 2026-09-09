@@ -54,6 +54,7 @@ class RedirectController extends Controller {
 			]);
 			// the administration page probes custom domains from the instance origin
 			$response->addHeader('Access-Control-Allow-Origin', '*');
+			$response->addHeader('X-Shortcloud', 'ping');
 			return $response;
 		}
 		if (!preg_match(LinkService::SLUG_PATTERN, $slug)) {

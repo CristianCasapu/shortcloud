@@ -42,8 +42,8 @@ Albums shared from Memories get a "Copy short link" button too (with the [casapu
 
 ## Setup
 
-1. Install and enable the app.
-2. Open **Administration settings › Shortcloud** and click **Install rewrite rule**. The app appends a small block to Nextcloud's `.htaccess`:
+1. Install and enable the app. On Apache with a writable `.htaccess` that is all: the app writes its rule on the first request after enabling.
+2. Otherwise open **Administration settings › Shortcloud**: it probes the short address over HTTP and tells you whether the rule works, offers **Install rewrite rule**, and shows the snippet for nginx or a virtual host. The block the app writes into Nextcloud's `.htaccess`:
 
    ```apache
    # BEGIN Shortcloud
