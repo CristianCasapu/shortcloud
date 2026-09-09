@@ -14,6 +14,7 @@ Shortcloud page.
 ## Features
 
 - **Automatic**: every new public link share gets a short link, whatever client created it.
+- **Albums too**: public album links of the Photos and Memories apps are picked up within minutes.
 - **In the sharing sidebar**: "Copy short link" and "Short link…" in the `…` menu of each link share, with a QR code.
 - **Custom endings**: the domain is fixed, the rest is yours: `/go/annual-report`.
 - **Custom short domains**: `https://cc.link/abc1234` served by the same server, no trusted-domain change needed.
@@ -109,6 +110,7 @@ All endpoints are OCS (`OCS-APIRequest: true`), under `/ocs/v2.php/apps/shortclo
 | PUT | `/links/{id}` | Change `slug`, `domain`, `target`, `title`, `status` (`active`/`paused`) |
 | DELETE | `/links/{id}` | Delete |
 | GET | `/share/{shareId}` | Short links of one of your link shares |
+| POST | `/album/{token}` | Short link of one of your public album links (Photos / Memories), created if missing |
 
 ## Privacy
 

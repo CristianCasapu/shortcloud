@@ -11,6 +11,7 @@ made (from the web, the desktop or the mobile clients), can be copied and custom
 sharing sidebar, and can be created by hand for any address from the Shortcloud page.
 
 * Automatic short link for every new link share, with a "Copy short link" entry in the sharing sidebar
+* Public album links of Photos and Memories get short links too
 * Custom slugs (`/go/annual-report`) — the domain is fixed, the rest is yours
 * Extra short domains (`https://cc.link/abc1234`) served by the same server
 * QR code for every short link
@@ -23,7 +24,7 @@ sharing sidebar, and can be created by hand for any address from the Shortcloud 
 The short address needs one rewrite rule in the web server. The administration page installs it into
 `.htaccess` with one click (Apache) and shows the snippet for other setups.
     ]]></description>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <licence>agpl</licence>
     <author mail="casapucristian@gmail.com">Cristian Casapu</author>
     <namespace>Shortcloud</namespace>
@@ -40,6 +41,7 @@ The short address needs one rewrite rule in the web server. The administration p
     </dependencies>
     <background-jobs>
         <job>OCA\Shortcloud\BackgroundJob\HealJob</job>
+        <job>OCA\Shortcloud\BackgroundJob\AlbumSyncJob</job>
     </background-jobs>
     <commands>
         <command>OCA\Shortcloud\Command\Setup</command>

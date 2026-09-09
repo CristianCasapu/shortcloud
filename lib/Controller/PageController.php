@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace OCA\Shortcloud\Controller;
 
 use OCA\Shortcloud\AppInfo\Application;
+use OCA\Shortcloud\Service\AlbumLinks;
 use OCA\Shortcloud\Service\Config;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -24,6 +25,7 @@ class PageController extends Controller {
 		IRequest $request,
 		private IInitialState $initialState,
 		private Config $config,
+		private AlbumLinks $albums,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 	}
@@ -31,6 +33,7 @@ class PageController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
+		$this->albums->trySync();
 		$this->initialState->provideInitialState('config', $this->config->forUser($this->config->getCurrentUserId()));
 		Util::addScript(Application::APP_ID, 'shortcloud-main');
 		return new TemplateResponse(Application::APP_ID, 'main');

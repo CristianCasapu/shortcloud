@@ -9,6 +9,7 @@ namespace OCA\Shortcloud\Controller;
 
 use OCA\Shortcloud\AppInfo\Application;
 use OCA\Shortcloud\Db\Link;
+use OCA\Shortcloud\Service\AlbumLinks;
 use OCA\Shortcloud\Service\Config;
 use OCA\Shortcloud\Service\LinkException;
 use OCA\Shortcloud\Service\LinkService;
@@ -31,6 +32,7 @@ class LinksController extends OCSController {
 	public function __construct(
 		IRequest $request,
 		private LinkService $links,
+		private AlbumLinks $albums,
 		private Config $config,
 		private ShareManager $shareManager,
 		private IL10N $l,
@@ -48,6 +50,7 @@ class LinksController extends OCSController {
 	#[NoAdminRequired]
 	public function index(string $search = '', bool $all = false): DataResponse {
 		$userId = $this->userId();
+		$this->albums->trySync();
 		$links = $all && $this->config->isAdmin($userId)
 			? $this->links->listAll($search)
 			: $this->links->listForUser($userId, $search);
@@ -59,6 +62,39 @@ class LinksController extends OCSController {
 	public function forShare(string $shareId): DataResponse {
 		$share = $this->ownShare($shareId);
 		return new DataResponse(['links' => $this->links->findForShare($share, $this->userId())]);
+	}
+
+	/**
+	 * The short link of a public album link (Photos / Memories), created if missing.
+	 * Only the album owner (or an administrator) may ask for it.
+	 *
+	 * @throws OCSNotFoundException
+	 * @throws OCSForbiddenException
+	 * @throws OCSBadRequestException
+	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 60, period: 60)]
+	public function album(string $token, ?string $domain = null, ?string $slug = null): DataResponse {
+		$userId = $this->userId();
+		$album = $this->albums->findByToken($token);
+		if ($album === null || ($album['owner'] !== $userId && !$this->config->isAdmin($userId))) {
+			throw new OCSNotFoundException($this->l->t('Album link not found'));
+		}
+		$existing = $this->links->findForShare(AlbumLinks::PREFIX . $token, $album['owner']);
+		if ($existing !== [] && self::blank($domain) === null && self::blank($slug) === null) {
+			return new DataResponse($existing[0]);
+		}
+		if (!$this->config->canCreate($userId)) {
+			throw new OCSForbiddenException($this->config->isPaused()
+				? $this->l->t('Creating short links is paused by the administrator')
+				: $this->l->t('You are not allowed to create short links'));
+		}
+		try {
+			$link = $this->albums->forToken($token, $album['owner'], self::blank($domain), self::blank($slug));
+		} catch (LinkException $e) {
+			throw new OCSBadRequestException($this->l->t($e->getMessage()));
+		}
+		return new DataResponse($link, Http::STATUS_CREATED);
 	}
 
 	/**

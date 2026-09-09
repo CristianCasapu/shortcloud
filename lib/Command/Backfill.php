@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace OCA\Shortcloud\Command;
 
+use OCA\Shortcloud\Service\AlbumLinks;
 use OCA\Shortcloud\Service\LinkService;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -23,6 +24,7 @@ class Backfill extends Command {
 		private IUserManager $userManager,
 		private ShareManager $shareManager,
 		private LinkService $links,
+		private AlbumLinks $albums,
 	) {
 		parent::__construct();
 	}
@@ -77,6 +79,22 @@ class Backfill extends Command {
 			$this->userManager->callForSeenUsers($handle);
 		}
 		$output->writeln(($dry ? 'Would create ' : 'Created ') . $created . ' short link(s), ' . $skipped . ' share(s) already had one.');
+		if ($only === null && $this->albums->isAvailable()) {
+			if ($dry) {
+				$n = 0;
+				$albums = $this->albums->listLinkAlbums();
+				foreach ($albums as $token => $album) {
+					if ($this->links->findForShare(AlbumLinks::PREFIX . $token) === []) {
+						$output->writeln($album['owner'] . ': would shorten album link "' . $album['name'] . '"');
+						$n++;
+					}
+				}
+				$output->writeln('Would create ' . $n . ' album short link(s).');
+			} else {
+				$stats = $this->albums->sync();
+				$output->writeln('Album links: ' . $stats['created'] . ' created, ' . $stats['gone'] . ' marked gone.');
+			}
+		}
 		return 0;
 	}
 }

@@ -17,6 +17,7 @@ return [
 		['name' => 'links#update', 'url' => '/api/v1/links/{id}', 'verb' => 'PUT'],
 		['name' => 'links#destroy', 'url' => '/api/v1/links/{id}', 'verb' => 'DELETE'],
 		['name' => 'links#forShare', 'url' => '/api/v1/share/{shareId}', 'verb' => 'GET'],
+		['name' => 'links#album', 'url' => '/api/v1/album/{token}', 'verb' => 'POST'],
 		['name' => 'admin#getSettings', 'url' => '/api/v1/admin/settings', 'verb' => 'GET'],
 		['name' => 'admin#setSettings', 'url' => '/api/v1/admin/settings', 'verb' => 'PUT'],
 		['name' => 'admin#rewriteStatus', 'url' => '/api/v1/admin/rewrite', 'verb' => 'GET'],

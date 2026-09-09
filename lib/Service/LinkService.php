@@ -222,7 +222,21 @@ class LinkService {
 			return ['status' => 'gone', 'target' => null, 'link' => $link];
 		}
 		$target = $link->getTarget();
-		if ($link->getShareId() !== null) {
+		if ($link->getShareId() !== null && str_starts_with((string)$link->getShareId(), 'album:')) {
+			$current = $this->albumTarget(substr((string)$link->getShareId(), 6));
+			if ($current === false) {
+				$link->setStatus(Link::STATUS_GONE);
+				$link->setUpdatedAt($this->time->getTime());
+				$this->mapper->update($link);
+				return ['status' => 'gone', 'target' => null, 'link' => $link];
+			}
+			if ($current !== null && $current !== $target) {
+				$link->setTarget($current);
+				$link->setUpdatedAt($this->time->getTime());
+				$this->mapper->update($link);
+				$target = $current;
+			}
+		} elseif ($link->getShareId() !== null) {
 			$current = $this->currentShareUrl($link);
 			if ($current === false) {
 				$link->setStatus(Link::STATUS_GONE);
@@ -261,13 +275,29 @@ class LinkService {
 		return $this->shareUrl($token);
 	}
 
+	/**
+	 * Album links live in the Photos tables; the lookup is delegated to avoid a circular dependency.
+	 * Returns the current album URL, false when the album link is gone, null when unknown.
+	 */
+	private function albumTarget(string $token): string|false|null {
+		try {
+			return \OCP\Server::get(AlbumLinks::class)->currentTarget($token) ?? false;
+		} catch (\Throwable) {
+			return null;
+		}
+	}
+
 	public function shareUrl(string $token): string {
 		try {
-			return $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+			$url = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+			if (str_contains($url, $token)) {
+				return $url;
+			}
 		} catch (\Throwable) {
-			// files_sharing routes unavailable in this context: build the classic form
-			return rtrim($this->urlGenerator->getAbsoluteURL('/index.php/s/' . $token), '/');
+			// fall through: files_sharing routes unavailable in this context
 		}
+		$pretty = $this->systemConfig->getSystemValueBool('htaccess.IgnoreFrontController', false) || getenv('front_controller_active') === 'true';
+		return $this->urlGenerator->getAbsoluteURL(($pretty ? '' : '/index.php') . '/s/' . $token);
 	}
 
 	// ---------------------------------------------------------------- validation

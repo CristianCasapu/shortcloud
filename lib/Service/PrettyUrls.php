@@ -52,6 +52,8 @@ class PrettyUrls {
 			throw new \RuntimeException('Set overwrite.cli.url in config.php first (Nextcloud needs it to build pretty URLs).');
 		}
 		$this->config->setSystemValue('htaccess.RewriteBase', $this->rewriteBase());
+		// also drop /index.php from links made on the command line and by cron (mails, background jobs)
+		$this->config->setSystemValue('htaccess.IgnoreFrontController', true);
 		$this->regenerate();
 	}
 
@@ -63,6 +65,7 @@ class PrettyUrls {
 			throw new \RuntimeException('.htaccess is not writable, or this Nextcloud cannot regenerate it.');
 		}
 		$this->config->deleteSystemValue('htaccess.RewriteBase');
+		$this->config->deleteSystemValue('htaccess.IgnoreFrontController');
 		$this->regenerate();
 	}
 

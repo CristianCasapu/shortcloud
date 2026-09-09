@@ -82,6 +82,15 @@ class LinkMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
+	/** @return Link[] */
+	public function findByShareIdPrefix(string $prefix): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->like('share_id', $qb->createNamedParameter($this->db->escapeLikeParameter($prefix) . '%')));
+		return $this->findEntities($qb);
+	}
+
 	public function countByUser(string $userId): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select($qb->func()->count('id', 'n'))
