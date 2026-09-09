@@ -1,6 +1,6 @@
 {
   "name": "shortcloud",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Short links for your Nextcloud shares",
   "private": true,
   "license": "AGPL-3.0-or-later",

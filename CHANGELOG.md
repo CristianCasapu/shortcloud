@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 — 2026-09-09
+
+- Styles were only injected into the sidebar bundle: the Shortcloud page and the administration page now carry their own.
+- Toast notifications are styled (dialogs stylesheet).
+- A deleted account takes its short links with it.
+- New commands: `occ shortcloud:list`, `occ shortcloud:delete <id|slug>`.
+- Screenshots in the repository.
+
 All notable changes to this project are documented in this file. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [semantic versioning](https://semver.org/).
