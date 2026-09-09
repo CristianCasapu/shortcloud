@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Pack
+        run: |
+          mkdir -p /tmp/pack/shortcloud
+          rsync -a --exclude node_modules --exclude .git --exclude .github --exclude screenshots --exclude 'npm-*.log' ./ /tmp/pack/shortcloud/
+          tar -C /tmp/pack -czf shortcloud-${GITHUB_REF_NAME}.tar.gz shortcloud
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: shortcloud-*.tar.gz
+          generate_release_notes: true

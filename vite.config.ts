@@ -1,0 +1,11 @@
+import { createAppConfig } from '@nextcloud/vite-config'
+
+export default createAppConfig({
+	main: 'src/main.ts',
+	sidebar: 'src/sidebar.ts',
+	admin: 'src/admin.ts',
+}, {
+	inlineCSS: true,
+	minify: true,
+	emptyOutputDirectory: { additionalDirectories: [] },
+})

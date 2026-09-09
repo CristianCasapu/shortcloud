@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>shortcloud</id>
+    <name>Shortcloud</name>
+    <summary>Short, memorable links on your own domain that redirect to your share links or to any other address</summary>
+    <summary lang="ro">Adrese scurte pe domeniul tău, care trimit la linkul de partajare sau la orice altă adresă</summary>
+    <description><![CDATA[
+Shortcloud turns every public share link into a short one, such as `https://cloud.example.com/go/abc1234`,
+that redirects to the real share URL. Short links are created automatically whenever a link share is
+made (from the web, the desktop or the mobile clients), can be copied and customised right from the
+sharing sidebar, and can be created by hand for any address from the Shortcloud page.
+
+* Automatic short link for every new link share, with a "Copy short link" entry in the sharing sidebar
+* Custom slugs (`/go/annual-report`) — the domain is fixed, the rest is yours
+* Extra short domains (`https://cc.link/abc1234`) served by the same server
+* QR code for every short link
+* Hit counter and last access, without storing visitor addresses
+* Links follow the share: a renamed share token keeps working, a deleted share answers "gone"
+* External targets are refused by default; the administrator can allow chosen hosts or any URL
+* Creation can be limited to groups; the administrator can pause creation while old links keep working
+* Disabling the app keeps every link stored; re-enabling brings them all back unchanged
+
+The short address needs one rewrite rule in the web server. The administration page installs it into
+`.htaccess` with one click (Apache) and shows the snippet for other setups.
+    ]]></description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author mail="casapucristian@gmail.com">Cristian Casapu</author>
+    <namespace>Shortcloud</namespace>
+    <category>tools</category>
+    <category>files</category>
+    <website>https://github.com/CristianCasapu/shortcloud</website>
+    <bugs>https://github.com/CristianCasapu/shortcloud/issues</bugs>
+    <repository type="git">https://github.com/CristianCasapu/shortcloud.git</repository>
+    <screenshot>https://raw.githubusercontent.com/CristianCasapu/shortcloud/main/screenshots/sidebar.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/CristianCasapu/shortcloud/main/screenshots/links.png</screenshot>
+    <dependencies>
+        <php min-version="8.1"/>
+        <nextcloud min-version="32" max-version="34"/>
+    </dependencies>
+    <background-jobs>
+        <job>OCA\Shortcloud\BackgroundJob\HealJob</job>
+    </background-jobs>
+    <commands>
+        <command>OCA\Shortcloud\Command\Setup</command>
+        <command>OCA\Shortcloud\Command\Backfill</command>
+        <command>OCA\Shortcloud\Command\Add</command>
+    </commands>
+    <settings>
+        <admin>OCA\Shortcloud\Settings\Admin</admin>
+        <admin-section>OCA\Shortcloud\Settings\AdminSection</admin-section>
+    </settings>
+    <navigations>
+        <navigation>
+            <name>Shortcloud</name>
+            <route>shortcloud.page.index</route>
+            <icon>app.svg</icon>
+            <order>60</order>
+        </navigation>
+    </navigations>
+</info>

@@ -1,0 +1,14 @@
+{
+  "name": "cristiancasapu/shortcloud",
+  "description": "Short links for your Nextcloud shares",
+  "type": "project",
+  "license": "AGPL-3.0-or-later",
+  "require": {
+    "php": ">=8.1"
+  },
+  "config": {
+    "platform": {
+      "php": "8.1"
+    }
+  }
+}
