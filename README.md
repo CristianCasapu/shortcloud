@@ -11,6 +11,10 @@ Shortcloud page.
 
 ![Short link dialog](screenshots/dialog.png)
 
+Albums shared from Memories get a "Copy short link" button too (with the [casapu/nc34](https://github.com/CristianCasapu/memories/tree/casapu/nc34) branch of Memories):
+
+![Memories album sharing](screenshots/album.png)
+
 ## Features
 
 - **Automatic**: every new public link share gets a short link, whatever client created it.
