@@ -1,3 +1,4 @@
+import '@nextcloud/dialogs/style.css'
 /**
  * Adds "Copy short link" and "Short link…" to the "…" menu of every public link
  * share in the Files sharing sidebar (Nextcloud 32+ inline actions API).

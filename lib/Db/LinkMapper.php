@@ -132,6 +132,13 @@ class LinkMapper extends QBMapper {
 		return $qb->executeStatement();
 	}
 
+	public function deleteByUser(string $userId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)));
+		return $qb->executeStatement();
+	}
+
 	private function applySearch(IQueryBuilder $qb, string $search): void {
 		$search = trim($search);
 		if ($search === '') {

@@ -322,11 +322,11 @@ function onClosing() {
 	flex-wrap: wrap;
 }
 .shortcloud-dialog__domain {
-	flex: 1 1 220px;
-	min-width: 200px;
+	flex: 3 1 260px;
+	min-width: 240px;
 }
 .shortcloud-dialog__slug {
-	flex: 1 1 200px;
+	flex: 2 1 180px;
 }
 .shortcloud-dialog__preview {
 	color: var(--color-text-maxcontrast);

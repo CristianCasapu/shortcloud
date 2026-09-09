@@ -45,6 +45,8 @@ The short address needs one rewrite rule in the web server. The administration p
         <command>OCA\Shortcloud\Command\Setup</command>
         <command>OCA\Shortcloud\Command\Backfill</command>
         <command>OCA\Shortcloud\Command\Add</command>
+        <command>OCA\Shortcloud\Command\Delete</command>
+        <command>OCA\Shortcloud\Command\ListLinks</command>
     </commands>
     <settings>
         <admin>OCA\Shortcloud\Settings\Admin</admin>

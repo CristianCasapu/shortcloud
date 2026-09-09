@@ -1,3 +1,4 @@
+import '@nextcloud/dialogs/style.css'
 import { loadState } from '@nextcloud/initial-state'
 import { createApp } from 'vue'
 import App from './views/App.vue'

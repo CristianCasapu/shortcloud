@@ -11,6 +11,7 @@ use OCA\Files\Event\LoadSidebar;
 use OCA\Shortcloud\Listener\LoadSidebarListener;
 use OCA\Shortcloud\Listener\ShareCreatedListener;
 use OCA\Shortcloud\Listener\ShareDeletedListener;
+use OCA\Shortcloud\Listener\UserDeletedListener;
 use OCA\Shortcloud\SetupCheck\RewriteCheck;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -18,6 +19,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Share\Events\ShareCreatedEvent;
 use OCP\Share\Events\ShareDeletedEvent;
+use OCP\User\Events\UserDeletedEvent;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'shortcloud';
@@ -30,6 +32,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(ShareCreatedEvent::class, ShareCreatedListener::class);
 		$context->registerEventListener(ShareDeletedEvent::class, ShareDeletedListener::class);
 		$context->registerEventListener(LoadSidebar::class, LoadSidebarListener::class);
+		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 		$context->registerSetupCheck(RewriteCheck::class);
 	}
 

@@ -5,7 +5,7 @@ export default createAppConfig({
 	sidebar: 'src/sidebar.ts',
 	admin: 'src/admin.ts',
 }, {
-	inlineCSS: true,
+	inlineCSS: { relativeCSSInjection: true },
 	minify: true,
 	emptyOutputDirectory: { additionalDirectories: [] },
 })

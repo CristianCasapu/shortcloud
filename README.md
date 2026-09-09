@@ -9,6 +9,8 @@ Shortcloud page.
 
 ![Sharing sidebar](screenshots/sidebar.png)
 
+![Short link dialog](screenshots/dialog.png)
+
 ## Features
 
 - **Automatic**: every new public link share gets a short link, whatever client created it.
@@ -25,6 +27,8 @@ Shortcloud page.
 - **OCS API** for scripts: `/ocs/v2.php/apps/shortcloud/api/v1/links`.
 
 ![Short links page](screenshots/links.png)
+
+![Administration settings](screenshots/admin.png)
 
 ## Requirements
 
