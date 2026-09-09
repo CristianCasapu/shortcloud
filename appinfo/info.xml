@@ -22,9 +22,9 @@ sharing sidebar, and can be created by hand for any address from the Shortcloud 
 * Disabling the app keeps every link stored; re-enabling brings them all back unchanged
 
 The short address needs one rewrite rule in the web server. The administration page installs it into
-`.htaccess` with one click (Apache) and shows the snippet for other setups.
+`.htaccess` with one click (Apache), keeps it there across upgrades, and shows the snippet for other setups.
     ]]></description>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <licence>agpl</licence>
     <author mail="casapucristian@gmail.com">Cristian Casapu</author>
     <namespace>Shortcloud</namespace>

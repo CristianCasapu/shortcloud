@@ -56,7 +56,6 @@ OC.L10N.register(
         "# install / check the rule": "# instalează / verifică regula",
         "Install rewrite rule": "Instalează regula de rescriere",
         "just now": "chiar acum",
-        "Keep the rule in place after Nextcloud upgrades (Nextcloud rewrites the end of .htaccess on every upgrade; the app restores the rule within an hour)": "Păstrează regula după actualizările Nextcloud (Nextcloud rescrie finalul .htaccess la fiecare actualizare; aplicația reface regula în cel mult o oră)",
         "Label (optional)": "Etichetă (opțional)",
         "Last visit": "Ultima vizită",
         "Length of random endings": "Lungimea terminațiilor aleatorii",
@@ -180,6 +179,7 @@ OC.L10N.register(
             "%n de vizite"
         ],
         "Album link not found": "Linkul de album nu a fost găsit",
-        "This album link does not exist": "Acest link de album nu există"
+        "This album link does not exist": "Acest link de album nu există",
+        "Keep the rule in place after Nextcloud upgrades (a core update replaces .htaccess; the app restores the rule within minutes)": "Păstrează regula după actualizările Nextcloud (o actualizare de bază înlocuiește .htaccess; aplicația reface regula în câteva minute)"
     },
 "nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);");

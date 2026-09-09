@@ -39,7 +39,7 @@
 				</NcButton>
 			</div>
 			<NcCheckboxRadioSwitch v-model="settings.manageHtaccess" type="switch" :disabled="busy" @update:model-value="save({ manageHtaccess: $event })">
-				{{ t('shortcloud', 'Keep the rule in place after Nextcloud upgrades (Nextcloud rewrites the end of .htaccess on every upgrade; the app restores the rule within an hour)') }}
+				{{ t('shortcloud', 'Keep the rule in place after Nextcloud upgrades (a core update replaces .htaccess; the app restores the rule within minutes)') }}
 			</NcCheckboxRadioSwitch>
 			<details class="shortcloud-admin__details">
 				<summary>{{ t('shortcloud', 'Rule for Apache (.htaccess) and nginx') }}</summary>

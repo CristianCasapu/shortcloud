@@ -21,7 +21,7 @@ use OCP\App\IAppManager;
 class Htaccess {
 	public const BEGIN = '# BEGIN Shortcloud';
 	public const END = '# END Shortcloud';
-	/** Nextcloud regenerates everything below this line on every upgrade. */
+	/** Nextcloud regenerates everything below this line on every upgrade and keeps what is above. */
 	public const NC_MARKER = '#### DO NOT CHANGE ANYTHING ABOVE THIS LINE ####';
 
 	public const STATUS_OK = 'ok';
@@ -133,12 +133,13 @@ class Htaccess {
 			throw new \RuntimeException('.htaccess is not writable by the web server user.');
 		}
 		$content = $this->strip((string)file_get_contents($this->path()));
-		// The block must run before the "pretty URL" rules Nextcloud generates below its
-		// marker line, otherwise /go/… is swallowed by the generic "RewriteRule . index.php".
-		$marker = self::NC_MARKER . "\n";
-		$pos = strpos($content, $marker);
+		// The block goes right ABOVE Nextcloud's marker line: "occ upgrade" and
+		// "occ maintenance:update:htaccess" regenerate everything below the marker but keep
+		// what is above it, and the block must run before the "pretty URL" rules Nextcloud
+		// generates below, otherwise /go/… is swallowed by the generic "RewriteRule . index.php".
+		$pos = strpos($content, self::NC_MARKER);
 		if ($pos !== false) {
-			$content = substr($content, 0, $pos + strlen($marker)) . "\n" . $block . substr($content, $pos + strlen($marker));
+			$content = rtrim(substr($content, 0, $pos), "\n") . "\n\n" . $block . "\n" . substr($content, $pos);
 		} else {
 			$content = rtrim($content, "\n") . "\n\n" . $block;
 		}

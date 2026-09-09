@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file. The format foll
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [1.1.1] – 2026-09-09
+
+- The rewrite block now sits above Nextcloud's marker line in .htaccess, so `occ upgrade` and
+  `occ maintenance:update:htaccess` keep it.
+- The self-healing job runs every 5 minutes and is time sensitive (time-insensitive jobs only run
+  inside the maintenance window, so it had never run); app updates trigger the check immediately.
+- The album sync job is time sensitive for the same reason.
+
 ## [1.1.0] – 2026-09-09
 
 - Public album links of the Photos and Memories apps get short links too: they are picked up

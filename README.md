@@ -54,7 +54,7 @@ Albums shared from Memories get a "Copy short link" button too (with the [casapu
    # END Shortcloud
    ```
 
-   Nextcloud regenerates the end of `.htaccess` on every upgrade; the app restores its block within the hour (switchable), and Administration › Overview warns when it is missing. You can also put the rule in the virtual host instead.
+   The block sits just above Nextcloud's marker line, which `occ upgrade` and `occ maintenance:update:htaccess` leave untouched. A core update that replaces `.htaccess` drops it; the app restores it within minutes (background job every 5 minutes, plus a check on every app update), and Administration › Overview warns when it is missing. You can also put the rule in the virtual host instead.
 3. Optional: `occ shortcloud:backfill` gives the shares that existed before the app their short links.
 
 Why a rewrite rule at all? Nextcloud keeps an allow-list of apps that may register routes at the root of the site, so a third-party app cannot answer at `/go/…` on its own. The rule sends the request to the app's entry point `go.php`, which boots Nextcloud like `public.php` does and runs the redirect controller through the normal middleware stack (brute-force protection, rate limiting, security headers).

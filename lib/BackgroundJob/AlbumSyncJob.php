@@ -19,7 +19,8 @@ class AlbumSyncJob extends TimedJob {
 	) {
 		parent::__construct($time);
 		$this->setInterval(300);
-		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
+		// time sensitive: insensitive jobs only run inside the maintenance window
+		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 
 	protected function run($argument): void {
