@@ -179,7 +179,7 @@
         ],
         "Album link not found": "Linkul de album nu a fost găsit",
         "This album link does not exist": "Acest link de album nu există",
-        "Keep the rule in place after Nextcloud upgrades (a core update replaces .htaccess; the app restores the rule within minutes)": "Păstrează regula după actualizările Nextcloud (o actualizare de bază înlocuiește .htaccess; aplicația reface regula în câteva minute)"
+        "Keep the rule in place after Nextcloud upgrades (checked right after an app or Nextcloud update, plus once a day)": "Păstrează regula după actualizările Nextcloud (verificată imediat după o actualizare de aplicație sau de Nextcloud, plus o dată pe zi)"
     },
     "pluralForm": "nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);"
 }

@@ -7,43 +7,26 @@ declare(strict_types=1);
 
 namespace OCA\Shortcloud\BackgroundJob;
 
-use OCA\Shortcloud\Service\Config;
-use OCA\Shortcloud\Service\Htaccess;
+use OCA\Shortcloud\Service\UpgradeWatch;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
-use Psr\Log\LoggerInterface;
 
 /**
- * A Nextcloud core update replaces .htaccess, which drops the short-link rule.
- * When the administrator asked the app to manage the rule, this job puts it
- * back within minutes. It is cheap (one file read) and time sensitive on
- * purpose: time-insensitive jobs only run inside the maintenance window.
+ * Last-resort safety net, once a day inside the maintenance window: the rule is
+ * normally restored the moment an app or Nextcloud itself is updated (see
+ * UpgradeWatch), so this only catches an administrator editing .htaccess by hand.
  */
 class HealJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private Config $config,
-		private Htaccess $htaccess,
-		private LoggerInterface $logger,
+		private UpgradeWatch $watch,
 	) {
 		parent::__construct($time);
-		$this->setInterval(300);
-		$this->setTimeSensitivity(self::TIME_SENSITIVE);
+		$this->setInterval(24 * 3600);
+		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 	}
 
 	protected function run($argument): void {
-		if (!$this->config->manageHtaccess()) {
-			return;
-		}
-		$status = $this->htaccess->status();
-		if ($status === Htaccess::STATUS_OK || $status === Htaccess::STATUS_UNAVAILABLE) {
-			return;
-		}
-		try {
-			$this->htaccess->install();
-			$this->logger->info('Shortcloud restored its rewrite rule in .htaccess', ['app' => 'shortcloud']);
-		} catch (\RuntimeException $e) {
-			$this->logger->warning('Shortcloud could not restore its rewrite rule: ' . $e->getMessage(), ['app' => 'shortcloud']);
-		}
+		$this->watch->repair('the daily check');
 	}
 }

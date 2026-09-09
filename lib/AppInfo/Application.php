@@ -13,6 +13,7 @@ use OCA\Shortcloud\Listener\LoadSidebarListener;
 use OCA\Shortcloud\Listener\ShareCreatedListener;
 use OCA\Shortcloud\Listener\ShareDeletedListener;
 use OCA\Shortcloud\Listener\UserDeletedListener;
+use OCA\Shortcloud\Service\UpgradeWatch;
 use OCA\Shortcloud\SetupCheck\RewriteCheck;
 use OCP\App\Events\AppEnableEvent;
 use OCP\App\Events\AppUpdateEvent;
@@ -42,5 +43,13 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
+		// one config comparison per request; real work only right after a Nextcloud update
+		$context->injectFn(static function (UpgradeWatch $watch): void {
+			try {
+				$watch->check();
+			} catch (\Throwable) {
+				// never let the watch break a request
+			}
+		});
 	}
 }

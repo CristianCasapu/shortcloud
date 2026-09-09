@@ -18,7 +18,7 @@ Albums shared from Memories get a "Copy short link" button too (with the [casapu
 ## Features
 
 - **Automatic**: every new public link share gets a short link, whatever client created it.
-- **Albums too**: public album links of the Photos and Memories apps are picked up within minutes.
+- **Albums too**: public album links of the Photos and Memories apps are picked up (one cheap change check every 15 minutes, or at once when the Shortcloud page opens).
 - **In the sharing sidebar**: "Copy short link" and "Short link…" in the `…` menu of each link share, with a QR code.
 - **Custom endings**: the domain is fixed, the rest is yours: `/go/annual-report`.
 - **Custom short domains**: `https://cc.link/abc1234` served by the same server, no trusted-domain change needed.
@@ -54,7 +54,7 @@ Albums shared from Memories get a "Copy short link" button too (with the [casapu
    # END Shortcloud
    ```
 
-   The block sits just above Nextcloud's marker line, which `occ upgrade` and `occ maintenance:update:htaccess` leave untouched. A core update that replaces `.htaccess` drops it; the app restores it within minutes (background job every 5 minutes, plus a check on every app update), and Administration › Overview warns when it is missing. You can also put the rule in the virtual host instead.
+   The block sits just above Nextcloud's marker line, which `occ upgrade` and `occ maintenance:update:htaccess` leave untouched. A core update that replaces `.htaccess` drops it; the app puts it back exactly when that can happen: on every app update (which `occ upgrade` runs right after regenerating `.htaccess`), on the first request after a Nextcloud version change, and as a last resort once a day in the maintenance window. Administration › Overview warns when it is missing. You can also put the rule in the virtual host instead.
 3. Optional: `occ shortcloud:backfill` gives the shares that existed before the app their short links.
 
 Why a rewrite rule at all? Nextcloud keeps an allow-list of apps that may register routes at the root of the site, so a third-party app cannot answer at `/go/…` on its own. The rule sends the request to the app's entry point `go.php`, which boots Nextcloud like `public.php` does and runs the redirect controller through the normal middleware stack (brute-force protection, rate limiting, security headers).

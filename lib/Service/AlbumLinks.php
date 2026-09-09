@@ -12,6 +12,7 @@ use OCA\Shortcloud\Db\LinkMapper;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IAppConfig;
 use OCP\IDBConnection;
 use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
@@ -37,6 +38,7 @@ class AlbumLinks {
 		private LinkService $links,
 		private Config $config,
 		private ITimeFactory $time,
+		private IAppConfig $appConfig,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -194,10 +196,34 @@ class AlbumLinks {
 		return $stats;
 	}
 
-	/** Runs sync() without ever failing the caller. */
-	public function trySync(): void {
+	/**
+	 * A fingerprint of the album-link table (row count and highest id): one indexed
+	 * query that tells whether anything was added or removed since the last sync.
+	 */
+	public function signature(): string {
+		if (!$this->isAvailable()) {
+			return '';
+		}
+		$qb = $this->db->getQueryBuilder();
+		$qb->select($qb->func()->count('id', 'n'))
+			->selectAlias($qb->func()->max('id'), 'm')
+			->from('photos_albums_collabs')
+			->where($qb->expr()->eq('collaborator_type', $qb->createNamedParameter(self::TYPE_LINK, IQueryBuilder::PARAM_INT)));
+		$result = $qb->executeQuery();
+		$row = $result->fetch();
+		$result->closeCursor();
+		return (int)($row['n'] ?? 0) . ':' . (int)($row['m'] ?? 0);
+	}
+
+	/** Runs sync() without ever failing the caller; with $onlyIfChanged, only when the table changed. */
+	public function trySync(bool $onlyIfChanged = false): void {
 		try {
+			$signature = $this->signature();
+			if ($onlyIfChanged && $signature === $this->appConfig->getValueString(\OCA\Shortcloud\AppInfo\Application::APP_ID, 'album_signature', '')) {
+				return;
+			}
 			$this->sync();
+			$this->appConfig->setValueString(\OCA\Shortcloud\AppInfo\Application::APP_ID, 'album_signature', $signature);
 		} catch (\Throwable $e) {
 			$this->logger->debug('Shortcloud album sync failed: ' . $e->getMessage(), ['app' => 'shortcloud']);
 		}

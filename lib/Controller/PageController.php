@@ -33,7 +33,7 @@ class PageController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
-		$this->albums->trySync();
+		$this->albums->trySync(onlyIfChanged: true);
 		$this->initialState->provideInitialState('config', $this->config->forUser($this->config->getCurrentUserId()));
 		Util::addScript(Application::APP_ID, 'shortcloud-main');
 		return new TemplateResponse(Application::APP_ID, 'main');

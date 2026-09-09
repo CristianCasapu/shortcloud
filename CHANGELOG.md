@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file. The format foll
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [1.1.2] – 2026-09-09
+
+- No more polling: the rewrite rule is checked exactly when something could have removed it —
+  on app updates, on the first request after a Nextcloud version change — plus one daily check
+  in the maintenance window as a safety net.
+- The album sync asks the database one cheap question first (row count and highest id) and only
+  does work when album links were added or removed; it runs every 15 minutes.
+
 ## [1.1.1] – 2026-09-09
 
 - The rewrite block now sits above Nextcloud's marker line in .htaccess, so `occ upgrade` and

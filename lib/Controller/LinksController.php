@@ -50,7 +50,7 @@ class LinksController extends OCSController {
 	#[NoAdminRequired]
 	public function index(string $search = '', bool $all = false): DataResponse {
 		$userId = $this->userId();
-		$this->albums->trySync();
+		$this->albums->trySync(onlyIfChanged: true);
 		$links = $all && $this->config->isAdmin($userId)
 			? $this->links->listAll($search)
 			: $this->links->listForUser($userId, $search);
